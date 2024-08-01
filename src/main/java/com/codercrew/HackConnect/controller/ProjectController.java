@@ -1,9 +1,12 @@
 package com.codercrew.HackConnect.controller;
 
 import com.codercrew.HackConnect.model.Chat;
+import com.codercrew.HackConnect.model.Invitation;
 import com.codercrew.HackConnect.model.Project;
 import com.codercrew.HackConnect.model.User;
+import com.codercrew.HackConnect.response.InviteRequest;
 import com.codercrew.HackConnect.response.MessageResponse;
+import com.codercrew.HackConnect.service.InvitationService;
 import com.codercrew.HackConnect.service.ProjectService;
 import com.codercrew.HackConnect.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ public class ProjectController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private InvitationService invitationService ;
 
     @GetMapping
     public ResponseEntity<List<Project>> getProjects(
@@ -98,5 +104,29 @@ public class ProjectController {
         return new ResponseEntity<>(chat,HttpStatus.OK);
     }
 
+    @PostMapping("/invite")
+    public ResponseEntity<MessageResponse> inviteProject(
+            @RequestBody InviteRequest req,
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody Project project
+    ) throws Exception {
+        User user = userService.findUserProfileByJwt(jwt);
+        invitationService.sendInvitation(req.getEmail(),req.getProjectId());
 
+        MessageResponse res = new MessageResponse("User invitation sent");
+
+        return new ResponseEntity<>(res,HttpStatus.OK);
+    }
+
+    @GetMapping("/accept_invitation")
+    public ResponseEntity<Invitation> acceptInviteProject(
+            @RequestParam String token,
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody Project project
+    ) throws Exception {
+        User user = userService.findUserProfileByJwt(jwt);
+        Invitation invitation = invitationService.acceptInvitation(token, user.getId());
+        projectService.addUserToProject(invitation.getId(), user.getId());
+        return new ResponseEntity<>(invitation,HttpStatus.ACCEPTED);
+    }
 }

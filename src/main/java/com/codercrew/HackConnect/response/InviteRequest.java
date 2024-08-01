@@ -1,14 +1,17 @@
-package com.codercrew.HackConnect.request;
+package com.codercrew.HackConnect.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+@AllArgsConstructor
+public class InviteRequest {
+
+    private Long projectId ;
 
     private String email ;
-    private String password ;
+
+
 }

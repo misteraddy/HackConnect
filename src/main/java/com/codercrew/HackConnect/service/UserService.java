@@ -34,7 +34,7 @@ public class UserService {
         return user;
     }
 
-    User findUserById(Long userId) throws Exception {
+    public User findUserById(Long userId) throws Exception {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if(optionalUser.isEmpty()) {
@@ -43,7 +43,7 @@ public class UserService {
         return optionalUser.get();
     }
 
-    User updateUsersProjectSize(User user,int number) {
+    public User updateUsersProjectSize(User user,Long number) {
 
         user.setProjectSize(user.getProjectSize() + number);
 
@@ -51,6 +51,5 @@ public class UserService {
 
         return savedUser;
     }
-
 
 }

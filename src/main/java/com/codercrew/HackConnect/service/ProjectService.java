@@ -128,8 +128,6 @@ public class ProjectService {
 
     public List<Project> searchProjects(String keyword, User user) throws Exception {
 
-        String partialName = "%" + keyword + "%";
-
-        return projectRepository.findByNameContainingAndTeamContains(partialName, user);
+        return projectRepository.findByNameContainingAndTeamContains(keyword, user);
     }
 }
